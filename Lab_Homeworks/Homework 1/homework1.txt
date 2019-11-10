@@ -1,42 +1,42 @@
-const int pinLED_R = 9;
-const int pinLED_G = 10;
-const int pinLED_B = 11;
+const int pinLedR = 9;
+const int pinLedG = 10;
+const int pinLedB = 11;
 
-const int pinPOT_R = A0;
-const int pinPOT_G = A1;
-const int pinPOT_B = A2;
+const int pinPotR = A0;
+const int pinPotG = A1;
+const int pinPotB = A2;
 
-unsigned int valuePOT_R = 0;
-unsigned int valuePOT_G = 0;
-unsigned int valuePOT_B = 0;
+unsigned int valuePotR = 0;
+unsigned int valuePotG = 0;
+unsigned int valuePotB = 0;
 
-unsigned int ledValue_R = 0;
-unsigned int ledValue_G = 0;
-unsigned int ledValue_B = 0;
+unsigned int ledValueR = 0;
+unsigned int ledValueG = 0;
+unsigned int ledValueB = 0;
 
 void setup() {
-  pinMode(pinPOT_R, INPUT);
-  pinMode(pinPOT_G, INPUT);
-  pinMode(pinPOT_B, INPUT);
+  pinMode(pinPotR, INPUT);
+  pinMode(pinPotG, INPUT);
+  pinMode(pinPotB, INPUT);
   
-  pinMode(pinLED_R, OUTPUT);
-  pinMode(pinLED_G, OUTPUT);
-  pinMode(pinLED_B, OUTPUT);
+  pinMode(pinLedR, OUTPUT);
+  pinMode(pinLedG, OUTPUT);
+  pinMode(pinLedB, OUTPUT);
   Serial.begin(9600);
 }
 
 void loop() {
-  valuePOT_R =  analogRead(pinPOT_R);
-  valuePOT_G =  analogRead(pinPOT_G);
-  valuePOT_B =  analogRead(pinPOT_B);
+  valuePotR =  analogRead(pinPotR);
+  valuePotG =  analogRead(pinPotG);
+  valuePotB =  analogRead(pinPotB);
   
-  ledValue_R = map(valuePOT_R, 0, 1023, 0, 255);
-  ledValue_G = map(valuePOT_G, 0, 1023, 0, 255);
-  ledValue_B = map(valuePOT_B, 0, 1023, 0, 255);
+  ledValueR = map(valuePotR, 0, 1023, 0, 255);
+  ledValueG = map(valuePotG, 0, 1023, 0, 255);
+  ledValueB = map(valuePotB, 0, 1023, 0, 255);
   
-  analogWrite(pinLED_R, ledValue_R);
-  analogWrite(pinLED_G, ledValue_G);
-  analogWrite(pinLED_B, ledValue_B);
+  analogWrite(pinLedR, ledValueR);
+  analogWrite(pinLedG, ledValueG);
+  analogWrite(pinLedB, ledValueB);
   
-  Serial.println(valuePOT_R);
+  Serial.println(valuePotR);
 }

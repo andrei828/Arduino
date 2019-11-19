@@ -5,3 +5,6 @@
 
 ### 2nd Homework
 **KnockDetector**: Read the value of a piezo buzzer and if it is higher than a specified threshold, start a buzzer sound (using a different buzzer) which stops at the press of a pushbutton.
+
+### 3rd Homework
+**4Digit7SegmentDisplayJoystick**: Controlling the value of digits from a 4 digit 7 segment display using a joystick. The x value is used for choosing the digit and the y value is used to increase or decrease the number on the current digit.

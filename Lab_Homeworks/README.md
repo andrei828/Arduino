@@ -8,3 +8,6 @@
 
 ### 3rd Homework
 **4Digit7SegmentDisplayJoystick**: Controlling the value of digits from a 4 digit 7 segment display using a joystick. The x value is used for choosing the digit and the y value is used to increase or decrease the number on the current digit.
+
+### 4th Homework
+**GameMenu**: Navigate trough a game menu with a joystick and LCD. It has a start state, a highscore state and a settings state. Here is the link for the demo: https://youtu.be/J240X5oPPDw 

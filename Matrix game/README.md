@@ -5,8 +5,5 @@ when internet is down.
 
 Essentially, the player is a dot, and obstacles come your way and you have to jump over them. The time alive and the score are tracked and you have a number of lives. The speed can also be adjusted in the settings.
 
-### The game uses
-* Arduino Uno
-* 8x8 LED matrix
-* LCD display
-* Joystick
+### The game uses:
+Arduino Uno | 8x8 LED matrix | LCD display | Joystick

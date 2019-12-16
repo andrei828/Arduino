@@ -10,3 +10,7 @@ Essentially, the player is a dot, and obstacles come your way and you have to ju
 * 8x8 LED matrix
 * LCD display
 * Joystick
+
+### How to play
+This is a two player game where one is using the joystick to jump over obstacles and the other spawns obstacles at the push of a button
+You can select the starting level from the settings (Speed is proportional with the current level). The goal is to beat the highscore (stored in EEPROM inside the Arduino board)

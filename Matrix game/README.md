@@ -13,4 +13,6 @@ Essentially, the player is a dot, and obstacles come your way and you have to ju
 
 ### How to play
 This is a two player game where one is using the joystick to jump over obstacles and the other spawns obstacles at the push of a button
-You can select the starting level from the settings (Speed is proportional with the current level). The goal is to beat the highscore (stored in EEPROM inside the Arduino board)
+You can select the starting level from the settings (Speed is proportional with the current level). The goal is to beat the high-score (stored in EEPROM inside the Arduino board)
+
+Here is a link to watch a demo: https://youtu.be/S1r07uuKZfM

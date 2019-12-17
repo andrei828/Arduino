@@ -35,6 +35,7 @@
 #define MAX_ON_SCREEN_OBSTACLES 3
 
 LedControl lc = LedControl(12, 11, 10, 1);
+LiquidCrystal lcd(RS, enable, d4, d5, d6, d7);
 
 struct Obstacle {
   int xPos;
@@ -136,19 +137,19 @@ long previousMillisSettings = 0;
 long previousMillisFinishGame = 0;
 
 // for matrix
+long spawnObstacleMillis = 0;
 long previousMillisJumping = 0;
 long previousMillisGravity = 0;
 long previousMillisObstacleMove = 0;
-long spawnObstacleMillis = 0;
 
 int index = 0;
 int startTime = 0;
 int longPress = 0;
-int buttonPressed = 0;
-int buttonPreviousValue = 0;
-int buttonCurrentValue = 0;
 int firstPress = 0;
+int buttonPressed = 0;
 int obstacleSpeed = 10;
+int buttonCurrentValue = 0;
+int buttonPreviousValue = 0;
 
 // matrix variables
 int currentX = 1;
@@ -167,6 +168,10 @@ const int d7 = 2;
 // start menu variables
 byte fall = 0;
 byte blink = 0;
+int highScore = 0;
+int currentLevel = 1;
+int currentScore = 0;
+int currentLives = 3;
 long delay005Sec = 50;
 long delay05Sec = 500;
 long delay1Sec = 1000;
@@ -174,12 +179,6 @@ long delay3Sec = 3000;
 long delay10Sec = 10000;
 long delay30Sec = 30000;
 int startingLevelValue = 1;
-int currentLevel = 1;
-int currentScore = 0;
-int currentLives = 3;
-int highScore = 0;
-
-LiquidCrystal lcd(RS, enable, d4, d5, d6, d7);
 
 int menuState = LOADING_SCREEN;
 int mainMenuState = UPPER_MAIN_MENU; 
@@ -272,11 +271,6 @@ void drawObstacles() {
          else
           obstacleList[i].width--;
          
-          char buffer[256];
-          sprintf(buffer, "xpos: %d\tcurrentX: %d\twidth: %d\nypos: %d\tcurrentY: %d\t height: %d\n\n",
-           obstacleList[i].xPos, currentX, obstacleList[i].xPos + obstacleList[i].width,
-            obstacleList[i].yPos, currentY, obstacleList[i].yPos - obstacleList[i].height);
-//          Serial.print(buffer);
           if ((obstacleList[i].xPos < currentX && 
                obstacleList[i].xPos + obstacleList[i].width >= currentX) && (
               (obstacleList[i].yPos >= currentY && 
@@ -303,8 +297,8 @@ void drawObstacles() {
             if (obstacleList[i].yPos == hardObstacles[idx][0] &&
                 obstacleList[i].height == hardObstacles[idx][2]) {
                currentScore++;
-               Serial.println("Hard");
-                }
+              
+            }
           if (highScore < currentScore) {
             saveHigh(currentScore);
             highScore = currentScore;
@@ -312,21 +306,7 @@ void drawObstacles() {
        }
        
        } else {
-         // part of obstacle is on screen
-//          Serial.println("Here");
-//          int partialWidth = obstacleList[i].xPos + obstacleList[i].width - MATRIX_WIDTH;
-//          
-//          for (int j = 0; j < partialWidth; j++)
-//            for (int k = 0; k < obstacleList[i].height; k++) {
-//              Serial.print("Draw at\t");
-//              Serial.print(obstacleList[i].yPos - k);
-//              Serial.print('\t');
-//              Serial.println(obstacleList[i].xPos + j);
-//              matrix[obstacleList[i].yPos - k][obstacleList[i].xPos + j] = 1;
-//            }
-//              
           obstacleList[i].xPos--;
-          
         }
       
     }
@@ -348,6 +328,15 @@ void drawUpperMainMenu() {
   lcd.setCursor(15, 1);
   
   lcd.write(DOWN_ARROW);
+
+  if (yValue > 600 && !yPressed) {
+    yPressed = 1;
+    lcd.clear();
+    mainMenuState = LOWER_MAIN_MENU;
+    mainMenuSelectedValue = ITEM_HIGHSCORE;
+  } else {
+    yPressed = 0;
+  }
 }
 
 void drawLowerMainMenu() {
@@ -450,7 +439,6 @@ void drawStartMenu() {
     if (currentScore > 9)
       lcd.setCursor(14, 1);
     lcd.print(currentScore);
-
 
     // ActualGame
     if (gameOverState == 1) {
@@ -749,6 +737,14 @@ void drawLoadingScreen() {
   lcd.print("Jumping LEDs");
   lcd.setCursor(4, 1);
   lcd.print("Loading...");
+
+  if (previousMillisLoading == 0)
+    previousMillisLoading = millis();
+   
+  if (previousMillisLoading + delay3Sec < millis()){
+    menuState = MAIN_MENU;
+    lcd.clear();
+  }
 }
 
 void setup() {
@@ -765,9 +761,10 @@ void setup() {
   lc.shutdown(0, false);
   lc.setIntensity(0, 2);
   lc.clearDisplay(0);
-  
-  pinMode(pinSW, INPUT_PULLUP);
+
   pinMode(buttonPin, INPUT);
+  pinMode(pinSW, INPUT_PULLUP);
+  
   //lcd.home();
   lcd.begin(16, 2);
   lcd.createChar(UP_ARROW, upArrow);
@@ -783,45 +780,26 @@ void setup() {
 //    EEPROM.write(i, 0);
 
    highScore = getHigh();
-   saveHigh(0);
 }
 
 void loop() {
   xValue = analogRead(pinX);
   yValue = analogRead(pinY);
   currentSWValue = !digitalRead(pinSW);
+  
   if (menuState == LOADING_SCREEN) {
     drawLoadingScreen();
-    
-    if (previousMillisLoading == 0)
-      previousMillisLoading = millis();
-     
-    if (previousMillisLoading + delay3Sec < millis()){
-      menuState = MAIN_MENU;
-      lcd.clear();
-    }
   
-  }else if (menuState == MAIN_MENU) {
+  } else if (menuState == MAIN_MENU) {
     if (mainMenuState == UPPER_MAIN_MENU) {
       drawUpperMainMenu();
-  
-      if (yValue > 600 && !yPressed) {
-        yPressed = 1;
-        lcd.clear();
-        mainMenuState = LOWER_MAIN_MENU;
-        mainMenuSelectedValue = ITEM_HIGHSCORE;
-      } else {
-        yPressed = 0;
-      }
-      
     } else if (mainMenuState == LOWER_MAIN_MENU) {
       drawLowerMainMenu();
-  
     } else if (mainMenuState == THIRD_MAIN_MENU) {
       drawThirdMainMenu();
     }
   
-    if(mainMenuSelectedValue == ITEM_START && currentSWValue == 1 && previousSWValue != currentSWValue) {
+    if (mainMenuSelectedValue == ITEM_START && currentSWValue == 1 && previousSWValue != currentSWValue) {
       menuState = START_MENU;
       firstPress = 1;
       previousMillis = millis();
